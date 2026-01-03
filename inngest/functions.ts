@@ -65,6 +65,11 @@ export const codeAgent = inngest.createFunction(
 				}
 			);
 
+			// Validate API key
+			if (!process.env.GEMINI_API_KEY) {
+				throw new Error("GEMINI_API_KEY is not set in environment variables");
+			}
+
 			const model = gemini({
 				model: "gemini-2.5-pro",
 				apiKey: process.env.GEMINI_API_KEY!,
@@ -264,11 +269,28 @@ export const codeAgent = inngest.createFunction(
 		} catch (error) {
 			console.error("Agent execution error:", error);
 
+			// Enhanced error handling with more details
+			let errorMessage = "Unknown error occurred";
+			if (error instanceof Error) {
+				errorMessage = error.message;
+
+				// Add specific error handling for common issues
+				if (error.message.includes("API key") || error.message.includes("authentication")) {
+					errorMessage = "Authentication failed: Please check your GEMINI_API_KEY";
+				} else if (error.message.includes("rate limit") || error.message.includes("quota")) {
+					errorMessage = "API rate limit exceeded: Please check your Google AI quota";
+				} else if (error.message.includes("network") || error.message.includes("fetch")) {
+					errorMessage = "Network error: Could not connect to Google AI API";
+				} else if (error.message.includes("model") || error.message.includes("not found")) {
+					errorMessage = "Model not available: gemini-2.5-pro may not be accessible";
+				}
+			}
+
 			await step.run("save-error", async () => {
 				return await prisma.message.create({
 					data: {
 						projectId: event.data.projectId,
-						content: `Agent failed: ${(error as Error).message}`,
+						content: `Agent failed: ${errorMessage}`,
 						role: "ASSISTANT",
 						type: "ERROR",
 					},
@@ -276,7 +298,7 @@ export const codeAgent = inngest.createFunction(
 			});
 
 			return {
-				error: (error as Error).message,
+				error: errorMessage,
 			};
 		}
 	}
