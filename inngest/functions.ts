@@ -4,8 +4,8 @@ import {
 	createNetwork,
 	Message,
 	createState,
+	gemini,
 } from "@inngest/agent-kit";
-import { models } from "@inngest/ai";
 import { inngest } from "./client";
 import { Sandbox } from "e2b";
 import { getSandbox, lastAssistantTextMessageContent, parseAgentOutput } from "./utils";
@@ -65,7 +65,7 @@ export const codeAgent = inngest.createFunction(
 				}
 			);
 
-			const model = models.gemini({
+			const model = gemini({
 				model: "gemini-3-pro-preview",
 				apiKey: process.env.GEMINI_API_KEY!,
 			});
@@ -196,7 +196,7 @@ export const codeAgent = inngest.createFunction(
 			const fragmentTitleGenerator = createAgent<AgentState>({
 				name: "fragment-title",
 				system: FRAGMENT_TITLE_PROMPT,
-				model: models.gemini({
+				model: gemini({
 					model: "gemini-3-pro-preview",
 					apiKey: process.env.GEMINI_API_KEY!,
 				}),
@@ -205,7 +205,7 @@ export const codeAgent = inngest.createFunction(
 			const responseGenerator = createAgent<AgentState>({
 				name: "response-generator",
 				system: RESPONSE_PROMPT,
-				model: models.gemini({
+				model: gemini({
 					model: "gemini-3-pro-preview",
 					apiKey: process.env.GEMINI_API_KEY!,
 				}),
