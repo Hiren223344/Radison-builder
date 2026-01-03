@@ -1,11 +1,11 @@
 import {
-	google,
 	createAgent,
 	createTool,
 	createNetwork,
 	Message,
 	createState,
 } from "@inngest/agent-kit";
+import { models } from "@inngest/ai";
 import { inngest } from "./client";
 import { Sandbox } from "e2b";
 import { getSandbox, lastAssistantTextMessageContent, parseAgentOutput } from "./utils";
@@ -65,9 +65,9 @@ export const codeAgent = inngest.createFunction(
 				}
 			);
 
-			const model = google({
+			const model = models.gemini({
 				model: "gemini-3-pro",
-				apiKey: process.env.GOOGLE_AI_API_KEY!,
+				apiKey: process.env.GEMINI_API_KEY!,
 			});
 
 			const codeAgent = createAgent<AgentState>({
@@ -196,18 +196,18 @@ export const codeAgent = inngest.createFunction(
 			const fragmentTitleGenerator = createAgent<AgentState>({
 				name: "fragment-title",
 				system: FRAGMENT_TITLE_PROMPT,
-				model: google({
+				model: models.gemini({
 					model: "gemini-3-pro",
-					apiKey: process.env.GOOGLE_AI_API_KEY!,
+					apiKey: process.env.GEMINI_API_KEY!,
 				}),
 			});
 
 			const responseGenerator = createAgent<AgentState>({
 				name: "response-generator",
 				system: RESPONSE_PROMPT,
-				model: google({
+				model: models.gemini({
 					model: "gemini-3-pro",
-					apiKey: process.env.GOOGLE_AI_API_KEY!,
+					apiKey: process.env.GEMINI_API_KEY!,
 				}),
 			});
 
