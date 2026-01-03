@@ -71,7 +71,7 @@ export const codeAgent = inngest.createFunction(
 			}
 
 			const model = gemini({
-				model: "gemini-3-flash-preview",
+				model: "models/gemini-flash-latest",
 				apiKey: process.env.GEMINI_API_KEY!,
 			});
 
@@ -202,7 +202,7 @@ export const codeAgent = inngest.createFunction(
 				name: "fragment-title",
 				system: FRAGMENT_TITLE_PROMPT,
 				model: gemini({
-					model: "gemini-3-flash-preview",
+					model: "models/gemini-flash-latest",
 					apiKey: process.env.GEMINI_API_KEY!,
 				}),
 			});
@@ -211,7 +211,7 @@ export const codeAgent = inngest.createFunction(
 				name: "response-generator",
 				system: RESPONSE_PROMPT,
 				model: gemini({
-					model: "gemini-3-flash-preview",
+					model: "models/gemini-flash-latest",
 					apiKey: process.env.GEMINI_API_KEY!,
 				}),
 			});
